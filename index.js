@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://fullstack-three-chi.vercel.app",
+    origin: ["http://127.0.0.1:5173"],
     credentials: true,
     httpOnly: true,
   })

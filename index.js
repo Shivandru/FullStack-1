@@ -14,6 +14,9 @@ app.use(
 );
 app.use("/user", userRouter);
 app.use("/blog", blogRouter);
+app.get("/", (req, res) => {
+  res.send("Home Page");
+});
 app.listen(Port, async () => {
   try {
     await connection;

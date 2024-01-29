@@ -30,7 +30,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["https://fullstack-three-chi.vercel.app"],
+    origin: ["https://fullstack-three-chi.vercel.app/"],
     credentials: true,
     httpOnly: true,
   })

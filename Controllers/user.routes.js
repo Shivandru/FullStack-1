@@ -9,6 +9,56 @@ const userRouter = express.Router();
 const accessTokenKey = process.env.ACCESS_TOKEN_KEY;
 const refreshTokenKey = process.env.REFRESH_TOKEN_KEY;
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated id of the user
+ *         username:
+ *           type: string
+ *           description: The user name
+ *         email:
+ *           type: string
+ *           description: The user email
+ *         pass:
+ *           type: string
+ *           description: The user password
+ */
+/**
+ * @swagger
+ * tags:
+ *   name: User
+ *   description: All the API routes related to User
+ */
+/**
+ * @swagger
+ * /user/register:
+ *   post:
+ *     summary: This will create a new user in the database
+ *     tags:
+ *       - User
+ *     requestBody:
+ *     required: true
+ *     content:
+ *       application/json:
+ *         schema:
+ *           $ref: "#/components/schemas/User"
+ *     responses:
+ *       200:
+ *         description: For creating a new user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               item:
+ *                 $ref: "#/components/schemas/User"
+ */
+
 userRouter.use(cookieParser());
 userRouter.post("/register", async (req, res) => {
   try {
@@ -26,7 +76,29 @@ userRouter.post("/register", async (req, res) => {
     res.status(400).send({ msg: error.message });
   }
 });
-
+/**
+ * @swagger
+ * /user/login:
+ *   post:
+ *     summary: This will validate the user
+ *     tags:
+ *       - User
+ *     requestBody:
+ *     required: true
+ *     content:
+ *       application/json:
+ *         schema:
+ *           $ref: "#/components/schemas/User"
+ *     responses:
+ *       200:
+ *         description: For authenticating the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               item:
+ *                 $ref: "#/components/schemas/User"
+ */
 userRouter.post("/login", async (req, res) => {
   try {
     const { email, pass } = req.body;
@@ -70,6 +142,25 @@ userRouter.post("/login", async (req, res) => {
     res.status(400).send({ msg: error.message });
   }
 });
+/**
+ * @swagger
+ * /user/logout:
+ *   get:
+ *     summary: This will logout the user
+ *     tags:
+ *       - User
+ *     responses:
+ *       200:
+ *         description: User logged out successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Message indicating successful logout
+ */
 
 userRouter.get("/logout", auth, async (req, res) => {
   try {

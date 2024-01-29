@@ -5,12 +5,11 @@ const jwt = require("jsonwebtoken");
 const auth = async (req, res, next) => {
   const accessToken = req.cookies["accessToken"];
   const refreshToken = req.cookies["refreshToken"];
-  console.log(accessToken, refreshToken);
   try {
     const blacklistToken = await BlacklistModel.findOne({
       accessToken: accessToken,
     });
-    if (blacklistToken == null) {
+    if (!blacklistToken) {
       jwt.verify(accessToken, accessTokenKey, function (err, decoded) {
         if (err) {
           jwt.verify(refreshToken, refreshTokenKey, function (err, decoded) {
@@ -20,7 +19,7 @@ const auth = async (req, res, next) => {
                 accessTokenKey,
                 { expiresIn: "1h" }
               );
-              res.cookie["accessToken"] = newToken;
+              res.cookie("accessToken", newToken);
               req.userId = decoded.userId;
               req.username = decoded.username;
               next();

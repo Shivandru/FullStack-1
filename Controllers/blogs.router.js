@@ -2,8 +2,54 @@ const express = require("express");
 const { BlogModel } = require("../Model/Blogs.Model");
 const blogRouter = express.Router();
 const { auth } = require("../Middlewares/Auth.middleware");
-
 blogRouter.use(auth);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Blog:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated id of the user
+ *         title:
+ *           type: string
+ *           description: Title of the Blog
+ *         body:
+ *           type: string
+ *           description: Description of the Blog
+ *         userId:
+ *           type: string
+ *           description: The Id of the user who created the blog
+ *         username:
+ *           type: string
+ *           description: The name of the user who created the blog
+ */
+/**
+ * @swagger
+ * tags:
+ *   name: Blog
+ *   description: All the API routes related to Blogs
+ */
+/**
+ * @swagger
+ * /blog:
+ *   get:
+ *     summary: This will get all the blogs from the database
+ *     tags:
+ *       - Blog
+ *     responses:
+ *       200:
+ *         description: Will get all the blogs from the database
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               item:
+ *                 $ref: "#/components/schemas/Blog"
+ */
 
 blogRouter.get("/", async (req, res) => {
   try {
@@ -13,7 +59,29 @@ blogRouter.get("/", async (req, res) => {
     res.status(404).send({ msg: error.message });
   }
 });
-
+/**
+ * @swagger
+ * /blog/add:
+ *   post:
+ *     summary: This will create a new blog in the database
+ *     tags:
+ *       - Blog
+ *     requestBody:
+ *     required: true
+ *     content:
+ *       application/json:
+ *         schema:
+ *           $ref: "#/components/schemas/Blog"
+ *     responses:
+ *       200:
+ *         description: Will create a new blog in the database
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               item:
+ *                 $ref: "#/components/schemas/Blog"
+ */
 blogRouter.post("/add", async (req, res) => {
   try {
     let userId = req.userId;

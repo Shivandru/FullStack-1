@@ -1,4 +1,6 @@
 const express = require("express");
+const swaggerJSdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -8,6 +10,23 @@ const { blogRouter } = require("./Controllers/blogs.router");
 const Port = process.env.PORT;
 const app = express();
 app.use(express.json());
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "FullStack 1",
+      version: "1.0.0",
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+      },
+    ],
+  },
+  apis: ["./Controllers/*.js"],
+};
+const swaggerSpec = swaggerJSdoc(options);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(cookieParser());
 app.use(
   cors({
@@ -19,7 +38,7 @@ app.use(
 app.use("/user", userRouter);
 app.use("/blog", blogRouter);
 app.get("/", (req, res) => {
-  res.send("Home Page");
+  res.status(200).send(`<h2>Welcome to my Blogging Website...</h2>`);
 });
 app.listen(Port, async () => {
   try {

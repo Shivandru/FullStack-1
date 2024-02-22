@@ -11,17 +11,27 @@ const auth = async (req, res, next) => {
     });
     if (!blacklistToken) {
       jwt.verify(accessToken, accessTokenKey, function (err, decoded) {
+        console.log(decoded);
         if (err) {
           jwt.verify(refreshToken, refreshTokenKey, function (err, decoded) {
             if (decoded) {
               var newToken = jwt.sign(
-                { userId: decoded.userId, username: decoded.username },
+                {
+                  userId: decoded.userId,
+                  username: decoded.username,
+                  role: decoded.role,
+                },
                 accessTokenKey,
                 { expiresIn: "1h" }
               );
-              res.cookie("accessToken", newToken);
+              res.cookie("accessToken", newToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "none",
+              });
               req.userId = decoded.userId;
               req.username = decoded.username;
+              req.role = decoded.role;
               next();
             } else {
               res.status(400).send({ msg: `Please Login Again` });
@@ -30,6 +40,7 @@ const auth = async (req, res, next) => {
         } else if (decoded) {
           req.userId = decoded.userId;
           req.username = decoded.username;
+          req.role = decoded.role;
           next();
         } else {
           res.status(404).send({ msg: "Please Login Again" });
